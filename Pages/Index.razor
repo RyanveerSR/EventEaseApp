@@ -1,0 +1,33 @@
+﻿@page "/"
+
+<h2>Upcoming Events</h2>
+
+@if (events == null)
+{
+    <p>Loading events...</p>
+}
+else if (!events.Any())
+{
+    <p>No events available at the moment.</p>
+}
+else
+{
+    @foreach (var ev in events)
+    {
+        <EventCard EventData="ev" />
+    }
+}
+
+@code {
+    private List<Event>? events;
+
+    protected override void OnInitialized()
+    {
+        events = new List<Event>
+        {
+            new Event { Id = 1, Name = "Corporate Meetup", Date = DateTime.Today.AddDays(5), Location = "London" },
+            new Event { Id = 2, Name = "Tech Conference", Date = DateTime.Today.AddDays(15), Location = "New York" },
+            new Event { Id = 3, Name = "Social Gala", Date = DateTime.Today.AddDays(30), Location = "Paris" }
+        };
+    }
+}

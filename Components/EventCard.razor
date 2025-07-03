@@ -1,0 +1,19 @@
+﻿@using System.Globalization
+@inject NavigationManager Navigation
+
+<div class="event-card" @onclick="NavigateToDetails" style="cursor:pointer; border:1px solid #ddd; padding:1rem; margin-bottom:1rem;">
+    <h3>@EventData.Name</h3>
+    <p><strong>Date:</strong> @EventData.Date.ToString("MMMM dd, yyyy", CultureInfo.InvariantCulture)</p>
+    <p><strong>Location:</strong> @EventData.Location</p>
+</div>
+
+@code {
+    [Parameter]
+    public Event EventData { get; set; } = new Event();
+
+    void NavigateToDetails()
+    {
+        if (EventData.Id > 0)
+            Navigation.NavigateTo($"/details/{EventData.Id}");
+    }
+}

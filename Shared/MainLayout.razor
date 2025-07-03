@@ -1,0 +1,29 @@
+﻿@inherits LayoutComponentBase
+
+<PageTitle>EventEase</PageTitle>
+
+<div class="main-layout">
+    <nav>
+        <a href="/">Events</a> |
+        <a href="/registration">Register</a>
+    </nav>
+    <div class="content">
+        @Body
+    </div>
+</div>
+
+<style>
+    .main-layout nav {
+        padding: 1rem;
+        background-color: #222;
+        color: white;
+    }
+    .main-layout nav a {
+        color: white;
+        margin-right: 1rem;
+        text-decoration: none;
+    }
+    .content {
+        padding: 1rem;
+    }
+</style>

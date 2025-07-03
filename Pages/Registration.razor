@@ -1,0 +1,74 @@
+﻿@page "/registration"
+@inject NavigationManager Navigation
+@inject UserSessionService UserSession
+
+<h2>Event Registration</h2>
+
+@if (registered)
+{
+    <p>Thank you, @UserSession.UserName! You have registered for event ID @UserSession.RegisteredEventId.</p>
+    <button @onclick="ClearRegistration">Register for another event</button>
+}
+else
+{
+    <EditForm Model="registrationModel" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div>
+            <label>Name:</label><br />
+            <InputText @bind-Value="registrationModel.Name" />
+            <ValidationMessage For="@(() => registrationModel.Name)" />
+        </div>
+
+        <div>
+            <label>Email:</label><br />
+            <InputText @bind-Value="registrationModel.Email" />
+            <ValidationMessage For="@(() => registrationModel.Email)" />
+        </div>
+
+        <div>
+            <label>Select Event:</label><br />
+            <InputSelect @bind-Value="registrationModel.EventId">
+                <option value="">-- Select Event --</option>
+                @foreach (var ev in events)
+                {
+                    <option value="@ev.Id">@ev.Name (@ev.Date.ToString("MMM dd"))</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => registrationModel.EventId)" />
+        </div>
+
+        <button type="submit">Register</button>
+    </EditForm>
+}
+
+@code {
+    private RegistrationModel registrationModel = new();
+    private bool registered = false;
+
+    private List<Event> events = new()
+    {
+        new Event { Id = 1, Name = "Corporate Meetup", Date = DateTime.Today.AddDays(5), Location = "London" },
+        new Event { Id = 2, Name = "Tech Conference", Date = DateTime.Today.AddDays(15), Location = "New York" },
+        new Event { Id = 3, Name = "Social Gala", Date = DateTime.Today.AddDays(30), Location = "Paris" }
+    };
+
+    private List<RegistrationModel> attendanceTracker = new();
+
+    private void HandleValidSubmit()
+    {
+        UserSession.UserName = registrationModel.Name;
+        UserSession.RegisteredEventId = registrationModel.EventId;
+
+        attendanceTracker.Add(registrationModel);
+
+        registered = true;
+    }
+
+    private void ClearRegistration()
+    {
+        registered = false;
+        registrationModel = new RegistrationModel();
+    }
+}

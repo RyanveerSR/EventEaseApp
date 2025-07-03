@@ -1,0 +1,54 @@
+﻿@page "/details/{EventId:int}"
+@inject NavigationManager Navigation
+
+<h2>Event Details</h2>
+
+@if (eventDetails == null)
+{
+    <p>Loading event details...</p>
+}
+else
+{
+    <div>
+        <h3>@eventDetails.Name</h3>
+        <p><strong>Date:</strong> @eventDetails.Date.ToString("MMMM dd, yyyy")</p>
+        <p><strong>Location:</strong> @eventDetails.Location</p>
+
+        <button @onclick="NavigateToRegistration">Register for this event</button>
+    </div>
+}
+
+@if (invalidEvent)
+{
+    <p class="text-danger">Sorry, this event does not exist.</p>
+}
+
+@code {
+    [Parameter]
+    public int EventId { get; set; }
+
+    private Event? eventDetails;
+    private bool invalidEvent = false;
+
+    private List<Event> allEvents = new()
+    {
+        new Event { Id = 1, Name = "Corporate Meetup", Date = DateTime.Today.AddDays(5), Location = "London" },
+        new Event { Id = 2, Name = "Tech Conference", Date = DateTime.Today.AddDays(15), Location = "New York" },
+        new Event { Id = 3, Name = "Social Gala", Date = DateTime.Today.AddDays(30), Location = "Paris" }
+    };
+
+    protected override void OnParametersSet()
+    {
+        eventDetails = allEvents.FirstOrDefault(e => e.Id == EventId);
+        if (eventDetails == null)
+        {
+            invalidEvent = true;
+        }
+    }
+
+    void NavigateToRegistration()
+    {
+        if (eventDetails != null)
+            Navigation.NavigateTo($"/registration?eventId={eventDetails.Id}");
+    }
+}
